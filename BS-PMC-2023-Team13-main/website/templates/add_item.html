@@ -1,0 +1,79 @@
+{% extends "base.html" %} {% block title %}הוספת פריט{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="static/add_item.css"/>
+{% endblock %}
+
+
+{% block content %}
+<body class="">
+    <div class="form_container container">
+        <form method="POST" action="{{ url_for('add_item') }}">
+            {{ form.hidden_tag() }}
+            <h3>הוספת פריט חדש</h3>
+            <div class="form-group">
+                {{ form.item_id.label }}
+                {{ form.item_id(class='form-control') }}
+                {% for error in form.item_id.errors %}
+                <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.item_name.label }}
+                {{ form.item_name(class='form-control') }}
+                {% for error in form.item_name.errors %}
+                <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.item_type.label }}
+                {{ form.item_type(class='form-control') }}
+                {% for error in form.item_type.errors %}
+                <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.item_desc.label }}
+                {{ form.item_desc(class='form-control') }}
+                {% for error in form.item_desc.errors %}
+                <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>            
+            {{ form.submit(class='btn btn-primary') }}
+
+        </form>
+    </div>
+
+    <hr>
+    <div class="table_container container">
+        <table class="table table-sortable table-hover">
+            <thead>
+                <tr class="table_head">
+                    <th>#</th>
+                    <th>מק"ט</th>
+                    <th>שם פריט</th>
+                    <th>סוג פריט</th>
+                    <th>תיאור פריט</th>
+                    <th>סטטוס</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                    <tr>
+                        <td scope="row">{{ item.id }}</td>
+                        <td>{{ item.item_ID }}</td>
+                        <td>{{ item.item_name }}</td>
+                        <td>{{ item.item_type }}</td>
+                        <td>{{ item.item_desc }}</td>
+                        <td>{{ item.status }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script src="static/tablesort.js" charset="utf-8"></script>
+</body>
+
+
+{% endblock %}

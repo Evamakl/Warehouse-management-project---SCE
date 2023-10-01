@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}
+    עדכון פרטים אישיים
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="static/update_user.css"/>
+
+{% endblock %}
+
+{% block content %}
+<body>
+	<div class="main">
+	<div class="login">
+	<h1 class="heading">עדכן פרטים</h1>
+	<form method="POST" action="{{ url_for('update_user') }}">
+		{{ form.csrf_token }}
+		<div class="form-group">
+		{{ form.first_name.label }}
+		{{ form.first_name(class_="form-control", value=current_user.first_name) }}
+		{% for error in form.first_name.errors %}
+			<span class="text-danger">{{ error }}</span>
+		{% endfor %}
+		</div>
+		<div class="form-group">
+		{{ form.last_name.label }}
+		{{ form.last_name(class_="form-control", value=current_user.last_name) }}
+		{% for error in form.last_name.errors %}
+			<span class="text-danger">{{ error }}</span>
+		{% endfor %}
+		</div>
+		<div class="form-group">
+		{{ form.phone_number.label }}
+		{{ form.phone_number(class_="form-control", value=current_user.phone_number) }}
+		{% for error in form.phone_number.errors %}
+			<span class="text-danger">{{ error }}</span>
+		{% endfor %}
+		</div>
+		<div class="form-group">
+		{{ form.current_password.label }}
+		{{ form.current_password(class_="form-control") }}
+		{% for error in form.current_password.errors %}
+			<span class="text-danger">{{ error }}</span>
+		{% endfor %}
+		</div>
+		<div class="form-group">
+		{{ form.new_password.label }}
+		{{ form.new_password(class_="form-control") }}
+		{% for error in form.new_password.errors %}
+			<span class="text-danger">{{ error }}</span>
+		{% endfor %}
+		</div>
+		<div class="form-group">
+		{{ form.confirm_password.label }}
+		{{ form.confirm_password(class_="form-control") }}
+		{% for error in form.confirm_password.errors %}
+			<span class="text-danger">{{ error }}</span>
+		{% endfor %}
+		</div>
+		{{ form.submit(class_="btn btn-primary") }}
+	</form>
+	</div>
+	</div>
+</body>
+{% endblock %}

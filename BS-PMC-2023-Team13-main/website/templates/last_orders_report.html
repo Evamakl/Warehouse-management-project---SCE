@@ -1,0 +1,151 @@
+<!-- last_orders_report.html -->
+{% extends 'base.html' %}
+{% block title %}
+    Last Orders Report
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="static/add_item.css"/>
+{% endblock %}
+
+{% block content %}
+<body class="">
+	<h1>דו"ח הזמנות אחרונות</h1>
+	<div class="form_container container">
+		<form method="POST" >
+			<div class="form-group">
+				<label class = "print-hide" for="date">בחר מאיזה תאריך תרצה לראות את הבקשות (התאריך שיוצג זה תאריך פתיחת הבקשה)</label>
+				<input class = "print-hide" type="date" id="date" name="search_start_date" >
+			</div>
+			<button type="submit" class="btn btn-primary">הצג דו"ח</button>
+			<hr>
+		</form>
+		{% if orders %}
+				<div class="table_container container">
+					<table id="ordersTable" class="table table-sortable table-hover">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>שם פרטי של המזמין</th>
+								<th>שם משפחה של המזמין</th>
+								<th>מספר טלפון של המזמין</th>
+								<th>מייל</th>
+								<th>תאריך שליחת הבקשה</th>
+								<th>תאריך השאלה</th>
+								<th>תאריך החזרה</th>
+								<th>סיבת השאלה</th>
+								<th> שם הפריט</th>
+								<th> סטטוס הבקשה</th>
+							</tr>
+						</thead>
+						<tbody>
+						{% for order in orders %}
+							<tr>
+								<td scope="row">{{ order.id }}</td>
+								<td>{{ order.loan_request_user.first_name }}</td>
+									<td>{{ order.loan_request_user.last_name }}</td>
+									<td>{{order.loan_request_user.phone_number }}</td>
+									<td>{{order.loan_request_user.email_address }}</td>
+									<td>{{order.opened_on }}</td>
+									<td>{{order.borrowing_date }}</td>
+									<td>{{order.return_data }}</td>
+									<td>{{ order.reason_for_borrowing }}</td>
+									<td>{{ order.loan_request_item.item_name }}</td>
+									<td>{{ order.status }}</td>
+							</tr>
+						{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</form>	
+			<!-- Buttons for printing and saving as Excel -->
+            <div class="buttons-container">
+                <button onclick="window.print();" class="btn btn-primary">הדפס</button>
+				<button onclick="exportToExcel();" class="btn btn-primary">ייצוא כקובץ excel</button>
+                <br/>
+            </div>
+		{% else %}
+			<p>אין בקשות השאלה.</p>
+		{% endif %}	
+
+	</div>
+	<script src="static/tablesort.js" charset="utf-8"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/vfs_fonts.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/vfs_fonts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/pdfmake.min.js"></script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+    <script>
+        function exportToExcel() {
+            const table = document.getElementById('ordersTable');
+            const wb = XLSX.utils.table_to_book(table, { sheet: 'Sheet1' });
+
+            // Add color to Excel sheet
+            const ws = wb.Sheets.Sheet1;
+            const range = XLSX.utils.decode_range(ws['!ref']);
+            
+            // Set color for the first row
+            for (let C = range.s.c; C <= range.e.c; ++C) {
+                const cellAddress = XLSX.utils.encode_cell({ r: range.s.r, c: C });
+                const cell = ws[cellAddress];
+                cell.s = {
+                    fill: { fgColor: { rgb: 'C4D79B' } }, // Set foreground color
+                };
+            }
+
+            const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+            saveAsExcelFile(wbout, 'דו"ח הזמנות אחרונות.xlsx');
+        }
+
+        function saveAsExcelFile(data, filename) {
+            const blob = new Blob([data], { type: 'application/octet-stream' });
+            if (typeof window.navigator.msSaveBlob !== 'undefined') {
+                // For IE browser
+                window.navigator.msSaveBlob(blob, filename);
+            } else {
+                // For modern browsers
+                const link = document.createElement('a');
+                if (link.download !== undefined) {
+                    const url = URL.createObjectURL(blob);
+                    link.setAttribute('href', url);
+                    link.setAttribute('download', filename);
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+            }
+        }
+    </script>
+	<style>
+		@media print {
+            /* Hide the buttons */
+            .btn.btn-primary {
+                display: none;
+			.print-hide {
+    			display: none;	
+            }
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            
+            .table {
+                width: 100%;
+                table-layout: fixed;
+            }
+            
+            .table td, .table th {
+                word-wrap: break-word;
+            }
+
+
+
+	</style>
+</body>
+{% endblock %}

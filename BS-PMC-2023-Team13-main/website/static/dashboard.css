@@ -1,0 +1,68 @@
+
+.grid-container{
+    margin: 0 3rem 0 3rem;
+    display: grid;
+    grid-template-areas:'welcome requests requests'
+                        'buttons requests requests'
+                        'msgs msgs msgs';
+    gap: 50px;
+    padding: 20px;
+}
+
+.welcome-container{
+    padding-top: 80px;
+    text-align: right;
+    grid-area: welcome;
+}
+
+.info{
+    display: inline-block;
+}
+
+#info-btn{
+    position: relative;
+    right: 200px;
+    top: 60px;
+}
+
+.requests-container{
+    text-align: center;
+    overflow: auto;
+    background-color: rgba(238, 232, 232, 0.3);
+    margin-top: 3rem;
+    box-shadow: 0px 12px 31px #ffffff52 , 2px 15px 15px #202020a1;
+    padding: 20px;
+    border-radius: 20px;
+    grid-area: requests;
+}
+
+.buttons-container{
+    text-align: right;
+    background-color: rgba(238, 232, 232, 0.3);
+    margin-top: 3rem;
+    box-shadow: 0px 12px 31px #ffffff52 , 2px 15px 15px #202020a1;
+    padding: 20px;
+    border-radius: 20px;
+    grid-area: buttons;
+}
+
+.messages-container{
+    text-align: center;
+    overflow: auto;
+    background-color: rgba(238, 232, 232, 0.3);
+    margin-top: 3rem;
+    margin-bottom: 5rem;
+    box-shadow: 0px 12px 31px #ffffff52 , 2px 15px 15px #202020a1;
+    padding: 20px;
+    border-radius: 20px;
+    grid-area: msgs;
+}
+
+.table_head{
+    background-color: rgba(165, 136, 243, 0.678);
+    color: black;
+}
+
+tbody tr:hover {
+    background-color: #cfcbcb75;
+  }

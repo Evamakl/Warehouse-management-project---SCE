@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% block title %}
+    דף בית
+{% endblock %}
+{% block style %}
+<link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+<style>
+    body{
+        background:#eee;
+    }
+    .card {
+        box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
+    }
+    .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 0 solid rgba(0,0,0,.125);
+        border-radius: 1rem;
+    }
+    .text-reset {
+        --bs-text-opacity: 1;
+        color: inherit!important;
+    }
+    a {
+        color: #5465ff;
+        text-decoration: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<body style="text-align: center;">
+<a role="button" class="btn btn-dark" href="{{ url_for('recommend_item_admin') }}">בקשות המלצה</a>
+<div style="
+        display:grid;
+        grid-template-columns:1fr 1fr 1fr 1fr; 
+        margin-top: 20px;
+        ">
+        <div>
+        <div class="container-fluid">
+
+            <div class="container">
+              <!-- Title -->
+        <div class="row">
+            <h2>בקשות שתרם הוחזרו בזמן</h2>
+            <div class="col-lg-12">
+              <!-- Details -->
+              {% for req in context.get('passed_requests') %}
+              <div class="card mb-4" style="background-color: rgb(245, 118, 109);">
+                
+                <div class="card-body" onclick="window.location.href='/show_request/{{ req.id }}'">
+                  <div class="mb-3 d-flex justify-content-between">
+                  </div>
+                  <table class="table table-borderless">
+                    <tfoot>
+                        <tr style="text-align: right;">
+                            <td colspan="2">פריט:</td>
+                            <td class="text-end">{{req.loan_request_item.item_name}}<br>{{req.loan_request_item.item_desc}}</td>
+                          </tr>
+                      <tr style="text-align: right;">
+                        <td colspan="2">תאריך החזרה:</td>
+                        <td class="text-end">{{req.return_date.strftime('%d/%m/%Y %H:%M')}}</td>
+                      </tr>
+                
+                      <tr class="fw-bold" style="text-align: right;">
+                        <td colspan="2">המשאיל:</td>
+                        <td class="text-end">{{req.loan_request_user.first_name}} {{req.loan_request_user.last_name}}</td>
+                      </tr>
+                      <tr class="fw-bold" style="text-align: right;">
+                        <td colspan="2">פרטי קשר:</td>
+                        <td class="text-end">{{req.loan_request_user.phone_number}}<br>{{req.loan_request_user.email_address}}</td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+                
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+    </div>
+    </div>
+    <div>
+        <div class="container-fluid">
+
+            <div class="container">
+              <!-- Title -->
+        <div class="row">
+            <h2>החזרה ביומים הקרובים</h2>
+            <div class="col-lg-12">
+              <!-- Details -->
+              {% for req in context.get('upcoming_requests') %}
+              <div class="card mb-4" style="background-color: rgb(245, 190, 109);">
+                <div class="card-body" onclick="window.location.href='/show_request/{{ req.id }}'" >
+                  <div class="mb-3 d-flex justify-content-between">
+                  </div>
+                  <table class="table table-borderless">
+                    <tfoot>
+                        <tr style="text-align: right;">
+                            <td colspan="2">פריט:</td>
+                            <td class="text-end">{{req.loan_request_item.item_name}}<br>{{req.loan_request_item.item_desc}}</td>
+                          </tr>
+                      <tr style="text-align: right;">
+                        <td colspan="2">תאריך החזרה:</td>
+                        <td class="text-end">{{req.return_date.strftime('%d/%m/%Y %H:%M')}}</td>
+                      </tr>
+                
+                      <tr class="fw-bold" style="text-align: right;">
+                        <td colspan="2">המשאיל:</td>
+                        <td class="text-end">{{req.loan_request_user.first_name}} {{req.loan_request_user.last_name}}</td>
+                      </tr>
+                      <tr class="fw-bold" style="text-align: right;">
+                        <td colspan="2"e>פרטי קשר:</td>
+                        <td class="text-end">{{req.loan_request_user.phone_number}}<br>{{req.loan_rquest_user.email_address}}</td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+    </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+        </body>
+          {% endblock %}

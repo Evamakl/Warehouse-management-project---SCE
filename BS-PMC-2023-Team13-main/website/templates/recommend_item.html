@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block style %}
+<link rel="stylesheet" href="static/add_item.css"/>
+{% endblock %}
+
+
+{% block content %}
+<body class="">
+    <div class="form_container container">
+        <form method="POST" action="{{ url_for('recommend_item_page') }}">
+            {{ form.hidden_tag() }}
+            <h3>טופס המלצה על פריט חדש</h3>
+            <h5>בדף זה תוכל להמליץ למנהל המחסן על פריטים חשובים שלדעתך תהיה צריך להשאיל </h5>
+            <h5> מלא את השדות הבאים ושלח למנהל המערכת את הטופס</h5>
+            {{ form.item_name.label }} {{ form.item_name }}
+            {{ form.amount.label }} {{ form.amount }}
+            {{ form.reason.label }} {{ form.reason(class='reason-text') }}
+            {{ form.submit(class='btn btn-primary') }}
+
+        </form>
+    </div> 
+    {% if recommended_items %}
+        <hr>
+        <div class="table_container container">
+            <table class="table table-sortable table-hover">
+                <thead>
+                    <tr class="table_head">
+                        <th>#</th>
+                        <th>שם פריט</th>
+                        <th>סיבת המלצה</th>
+                        <th>כמות פריטים מומלצת</th>
+                        <th>זמן שליחת הטופס</th>
+                        <th>סטטוס</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for request in recommended_items %}
+                        <tr>
+                            <th scope="row">{{ request.id }}</th>
+                            <td>{{ request.item_name }}</td>
+                            <td>{{ request.reason }}</td>
+                            <td>{{ request.amount }}</td>
+                            <td>{{ request.date_submitted }}</td>
+                            <td>
+                                {% if request.status == 'approve' %} מאושר
+                                {%elif  request.status == 'deny'%} נדחה
+                                {%elif request.status == 'ordered'%} הוזמן
+                                {%elif request.status == 'in_the_wh'%} במחסן
+                                {% else %}
+                                    {{ request.status }}
+                                {% endif %}
+                            </td>
+                            <td><!--buttons--></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
+        <script src="static/tablesort.js" charset="utf-8"></script>
+</body>
+{% endblock %}

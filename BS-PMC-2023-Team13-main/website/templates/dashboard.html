@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+{% block title %}
+    דף בית
+{% endblock %}
+
+{% block style %}
+<script>
+    function readMsg(msg_id){
+        window.location.href = "/read_msg_d/" + msg_id;
+    }
+    function delMsg(msg_id){
+        window.location.href = "/del_msg_m/" + msg_id;
+    }
+
+</script>
+<link rel="stylesheet" href="static/dashboard.css">
+<link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+{% endblock %}
+
+{% block content %}
+
+<body>
+    <div class="grid-container">
+        <div class="welcome-container">
+            {% if (date.hour >= 5) and (date.hour < 11) %}
+                <h3 class="info">בוקר טוב {{ user.first_name }} {{ user.last_name }}</h3>
+            {% elif (date.hour >= 11) and (date.hour < 17) %}
+                <h3 class="info">צהריים טובים {{ user.first_name }} {{ user.last_name }}</h3>
+            {% elif (date.hour >= 17) and (date.hour < 22) %}
+                <h3 class="info">ערב טוב {{ user.first_name }} {{ user.last_name }}</h3>
+            {% elif (date.hour >= 22) or (date.hour < 5) %}
+                <h3 class="info">לילה טוב {{ user.first_name }} {{ user.last_name }}</h3>
+            {% endif %}
+            <span id="info-btn"><a class="btn btn-outline-dark" href="{{ url_for('update_user') }}"><i class="fa-solid fa-gear"></i></a>  עדכון פרטים</span>
+            <p>תאריך היום:  {{ date.year }}/{{ date.month}}/{{ date.day }}  </p>
+        </div>
+        {% if not current_user.is_warehouse_manager %}
+            <div class="requests-container">
+                <h3>בקשות פתוחות</h3>
+                <hr>
+                <table class="table table-sortable table-hover">
+                    <thead>
+                        <tr class="table_head">
+                            <th>#</th>
+                            <th>מק"ט פריט</th>
+                            <th>תאריך התחלה</th>
+                            <th>תאריך סיום</th>
+                            <th>סטטוס בקשה</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for req in user.loan_requests %}
+                            {% if req.status == 'Activated' %}
+                            <tr>
+                                <td scope="row">{{ req.id }}</td>
+                                <td>{{ req.item_id }}</td>
+                                    <td>{{ req.borrowing_date }}</td>
+                                    <td>{{ req.return_date }}</td>
+                                <td>{{ req.status }}</td>
+                            </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="buttons-container">
+                <a role="button" class="btn btn-dark" href="{{ url_for('all_items') }}">בקש פריט</a>
+                <a role="button" class="btn btn-dark" href="{{ url_for('my_orders') }}">הבקשות שלי</a>
+                <a role="button" class="btn btn-dark" href="{{ url_for('my_notifications') }}">ההודעות שלי</a>
+                {% if current_user.is_teaching_staff_member %}
+                <a role="button" class="btn btn-dark" href="{{url_for('recommend_item_page') }}">המלצה על פריט</a>
+                <a role="button" class="btn btn-dark" href="{{url_for('stud_req_report') }}">דו"ח הזמנות סטודנטים</a>
+                {% endif %}
+            </div>
+            <div class="messages-container">
+                <h3>הודעות שלא נקראו</h3>
+                <hr>
+                <table class="table table-sortable table-hover">
+                    <thead>
+                        <tr class="table_head">
+                            <th>#</th>
+                            <th>תאריך</th>
+                            <th>הודעה</th>
+                            <th>פעולות</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for msg in user.messages %}
+                            {% if msg.status == "Sent" %}
+                                {% if msg.flag == 3 %}
+                                    <tr style="background-color: rgba(84, 228, 115, 0.651);">
+                                        <td scope="row">{{ msg.id }}</td>
+                                        <td>{{ msg.msg_date }}</td>
+                                        <td>{{ msg.message }}</td>
+                                        <td><button onclick="readMsg({{msg.id}})"><i class="fas fa-check-circle"></i></button><span> | </span><button onclick="confirmDelete({{msg.id}})"><i class="fa-solid fa-trash-can"></i></button></td>
+                                    </tr>
+                                {% elif msg.flag == 0 %}
+                                    <tr style="background-color: rgba(247, 0, 0, 0.466);">
+                                        <td scope="row">{{ msg.id }}</td>
+                                        <td>{{ msg.msg_date }}</td>
+                                        <td>{{ msg.message }}</td>
+                                        <td><button onclick="readMsg({{msg.id}})"><i class="fas fa-check-circle"></i></button><span> | </span><button onclick="confirmDelete({{msg.id}})"><i class="fa-solid fa-trash-can"></i></button></td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td scope="row">{{ msg.id }}</td>
+                                        <td>{{ msg.msg_date }}</td>
+                                        <td>{{ msg.message }}</td>
+                                        <td><button onclick="readMsg({{msg.id}})"><i class="fas fa-check-circle"></i></button><span> | </span><button onclick="confirmDelete({{msg.id}})"><i class="fa-solid fa-trash-can"></i></button></td>
+                                    </tr>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <script>
+                function confirmDelete(id) {
+                    var confirmed = confirm("האם את/ה בטוח/ה שאת/ה רוצה למחוק את ההודעה?");
+                    if (confirmed) {
+                        // User confirmed the deletion, perform the delete operation here
+                        delMsg(id);
+                    }
+                }
+                function readMsg(msg_id){
+                window.location.href = "/read_msg_m/" + msg_id;
+            }
+       
+            </script>
+        {% endif %}
+
+        {% if current_user.is_warehouse_manager %}
+        <div class="buttons-container">
+            <a role="button" class="btn btn-dark" href="{{ url_for('recommend_item_admin') }}">בקשות המלצה</a>
+            <a role="button" class="btn btn-dark" href="{{ url_for('new_report_admin') }}">דו"ח הזמנות ציוד</a>
+            <a role="button" class="btn btn-dark" href="{{ url_for('last_orders_report') }}">דו"ח הזמנות אחרונות</a>
+            <a role="button" class="btn btn-dark" href="{{ url_for('item_status_report') }}">דו"ח זמינות הפריטים במחסן</a>
+            <a role="button" class="btn btn-dark" href="{{ url_for('repair_status_report') }}">דו"ח פריטים תקולים</a>
+            <a role="button" class="btn btn-dark" href="{{ url_for('generate_returned_orders_report') }}">דו"ח החזרות </a>
+
+            <a role="button" class="btn btn-dark" href="{{ url_for('contact_teaching_staff') }}">צור קשר עם חברי סגל</a>
+
+        </div>
+        <div class="messages-container">
+            <h3>הודעות שלא נקראו</h3>
+            <hr>
+            <table class="table table-sortable table-hover">
+                <thead>
+                    <tr class="table_head">
+                        <th>#</th>
+                        <th>תאריך</th>
+                        <th>הודעה</th>
+                        <th>פעולות</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for msg in user.messages %}
+                        {% if msg.status == "Sent" %}
+                            {% if msg.flag == 3 %}
+                                <tr style="background-color: rgba(84, 228, 115, 0.651);">
+                                    <td scope="row">{{ msg.id }}</td>
+                                    <td>{{ msg.msg_date }}</td>
+                                    <td>{{ msg.message }}</td>
+                                    <td><button onclick="readMsg({{msg.id}})"><i class="fas fa-check-circle"></i></button><span> | </span><button onclick="confirmDelete({{msg.id}})"><i class="fa-solid fa-trash-can"></i></button></td>
+                                </tr>
+                            {% elif msg.flag == 0 %}
+                                <tr style="background-color: rgba(247, 0, 0, 0.466);">
+                                    <td scope="row">{{ msg.id }}</td>
+                                    <td>{{ msg.msg_date }}</td>
+                                    <td>{{ msg.message }}</td>
+                                    <td><button onclick="readMsg({{msg.id}})"><i class="fas fa-check-circle"></i></button><span> | </span><button onclick="confirmDelete({{msg.id}})"><i class="fa-solid fa-trash-can"></i></button></td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td scope="row">{{ msg.id }}</td>
+                                    <td>{{ msg.msg_date }}</td>
+                                    <td>{{ msg.message }}</td>
+                                    <td><button onclick="readMsg({{msg.id}})"><i class="fas fa-check-circle"></i></button><span> | </span><button onclick="confirmDelete({{msg.id}})"><i class="fa-solid fa-trash-can"></i></button></td>
+                                </tr>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <script>
+            function confirmDelete(id) {
+                var confirmed = confirm("האם את/ה בטוח/ה שאת/ה רוצה למחוק את ההודעה?");
+                if (confirmed) {
+                    // User confirmed the deletion, perform the delete operation here
+                    delMsg(id);
+                }
+             }
+             function readMsg(msg_id){
+                window.location.href = "/read_msg_m/" + msg_id;
+            }
+        </script>
+        {% endif %}
+    </div>
+</body>
+</html>
+{% endblock %}

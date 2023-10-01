@@ -1,0 +1,241 @@
+{% extends 'base.html' %}
+
+{% block title %}
+   דו"ח השאלות סטודנטים
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="static/add_item.css"/>
+{% endblock %}
+
+
+
+
+{% block content %}
+<body class="">
+    <h1>דו"ח השאלות סטודנטים</h1>
+    <div class="form_container">
+        {% if requests %}
+            <form method="POST" action="{{ url_for('stud_req_report') }}">
+                <div class="table_container">
+                    <table id="table-data" class="table table-sortable table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>שם פרטי של המזמין</th>
+                                <th>שם משפחה של המזמין</th>
+                                <th>מספר טלפון של המזמין</th>
+                                <th>מייל</th>
+                                <th>תאריך שליחת הבקשה</th>
+                                <th>תאריך השאלה</th>
+                                <th>תאריך החזרה</th>
+                                <th>סיבת השאלה</th>
+                                <th> שם הפריט</th>
+                                <th> סטטוס הבקשה</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for request in requests %}
+                                <tr>
+                                    <td scope="row">{{ request.id }}</td>
+                                    <td>{{ request.loan_request_user.first_name }}</td>
+                                    <td>{{ request.loan_request_user.last_name }}</td>
+                                    <td>{{request.loan_request_user.phone_number }}</td>
+                                    <td>{{request.loan_request_user.email_address }}</td>
+                                    <td>{{request.opened_on }}</td>
+                                    <td>{{request.borrowing_date }}</td>
+                                    <td>{{request.return_date }}</td>
+                                    <td>{{ request.reason_for_borrowing }}</td>
+                                    <td>{{ request.loan_request_item.item_name }}</td>
+                                    <td>{{ request.status }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>    
+            </form>
+            <!-- Buttons for printing and saving as Excel -->
+            <div class="buttons-container">
+                <button onclick="window.print();" class="btn btn-primary">הדפס</button>
+                <button onclick="exportToExcel();" class="btn btn-primary">ייצוא כקובץ excel</button>
+
+                <br/>
+            </div>
+            <div class="charts-container">
+                <div class="chart-container">
+                  <canvas id="myChart"></canvas>
+                </div>
+                <div class="chart-container">
+                  <canvas id="pieChart"></canvas>
+                </div>
+            </div>
+
+        {% else %}
+            <p>לא נשלחו בקשות השאלה עדיין</p>
+        {% endif %}
+    </div>
+    <script src="static/tablesort.js" charset="utf-8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="static/tablesort.js" charset="utf-8"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/vfs_fonts.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/vfs_fonts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/pdfmake.min.js"></script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+    <script>
+        function exportToExcel() {
+            const table = document.getElementById('table-data');
+            const wb = XLSX.utils.table_to_book(table, { sheet: 'Sheet1' });
+
+            // Add color to Excel sheet
+            const ws = wb.Sheets.Sheet1;
+            const range = XLSX.utils.decode_range(ws['!ref']);
+            
+            // Set color for the first row
+            for (let C = range.s.c; C <= range.e.c; ++C) {
+                const cellAddress = XLSX.utils.encode_cell({ r: range.s.r, c: C });
+                const cell = ws[cellAddress];
+                cell.s = {
+                    fill: { fgColor: { rgb: 'C4D79B' } }, // Set foreground color
+                };
+            }
+
+            const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+            saveAsExcelFile(wbout, 'דו"ח השאלות סטודנטים.xlsx');
+        }
+
+        function saveAsExcelFile(data, filename) {
+            const blob = new Blob([data], { type: 'application/octet-stream' });
+            if (typeof window.navigator.msSaveBlob !== 'undefined') {
+                // For IE browser
+                window.navigator.msSaveBlob(blob, filename);
+            } else {
+                // For modern browsers
+                const link = document.createElement('a');
+                if (link.download !== undefined) {
+                    const url = URL.createObjectURL(blob);
+                    link.setAttribute('href', url);
+                    link.setAttribute('download', filename);
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+            }
+        }
+    </script>
+    <script>
+        // Retrieve the data for existing items and request counts from the backend
+        var items = {{ items|tojson }};
+        var requestCounts = {{ request_counts|tojson }};
+      
+        // Create the chart
+        var ctx = document.getElementById('pieChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: items,
+            datasets: [{
+              label: 'Request Count',
+              data: requestCounts,
+              backgroundColor: 'rgba(75, 192, 192, 0.6)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  stepSize: 1
+                }
+              }
+            }
+          }
+        });
+    </script>
+    <script>
+        // Retrieve the data for existing items and request counts from the backend
+        var items = {{ items|tojson }};
+        var requestCounts = {{ request_counts|tojson }};
+      
+        // Create the chart
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+          type: 'pie',
+          data: {
+            labels: items,
+            datasets: [{
+              data: requestCounts,
+              backgroundColor: [
+                'rgba(255, 99, 132, 0.6)',
+                'rgba(54, 162, 235, 0.6)',
+                'rgba(255, 206, 86, 0.6)',
+                'rgba(75, 192, 192, 0.6)',
+                'rgba(153, 102, 255, 0.6)',
+                'rgba(255, 159, 64, 0.6)',
+                'rgba(255, 99, 132, 0.6)',
+              ],
+              borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)',
+                'rgba(255, 99, 132, 1)',
+              ],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true
+          }
+        });
+    </script>
+ 
+    
+    
+    <style>
+        @media print {
+            /* Hide the buttons */
+            .btn.btn-primary {
+                display: none;
+            }
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            
+            .table {
+                width: 100%;
+                table-layout: fixed;
+            }
+            
+            .table td, .table th {
+                word-wrap: break-word;
+            }
+            
+            @page {
+                margin: 0;
+            }
+        }
+        .charts-container {
+            display: flex;
+        }
+        
+        .chart-container {
+            width: 400px;
+            height: 300px;
+            margin-right: 10px;
+        }
+    </style>
+</body>
+{% endblock %}

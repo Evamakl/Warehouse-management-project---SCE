@@ -1,0 +1,39 @@
+{% extends "base.html" %} {% block title %}צור קשר עם מרצים{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="static/add_item.css"/>
+{% endblock %}
+
+
+{% block content %}
+<body class="">
+    <div class="table_container container">
+        <table class="table table-sortable table-hover">
+            <thead>
+                <tr class="table_head">
+                    <th>#</th>
+                    <th>שם מרצה</th>
+                    <th>אימייל</th>
+                    <th>מספר פלאפון</th>
+                    <th>פעולה</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td scope="row">{{ user.id }}</td>
+                        <td>{{ user.first_name }} {{ user.last_name }}</td>
+                        <td>{{ user.email_address }}</td>
+                        <td>{{ user.phone_number }}</td>
+                        <td><span><a href="mailto: {{ user.email_address }}"><i class="fa-regular fa-envelope fa-xl" style="color: #075ae9;"></i></a></span> | <span><a href="https://api.whatsapp.com/send?phone={{'972'+user.phone_number[1:]}}"><i class="fa-brands fa-whatsapp fa-xl" style="color: #31dd53;"></i></a></span></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script src="static/tablesort.js" charset="utf-8"></script>
+</body>
+
+
+{% endblock %}

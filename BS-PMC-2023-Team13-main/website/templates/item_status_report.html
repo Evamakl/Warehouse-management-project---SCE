@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% block title %}
+    Item Report
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="static/add_item.css"/>
+{% endblock %}
+
+{% block content %}
+<body class="">
+    <h1>דו"ח זמינות הפריטים במחסן</h1>
+    <div class="form_container container">
+        {% if items %}
+            <div class="table_container container">
+                <table class="table table-sortable table-hover" id="myTable">
+                    <thead>
+                        <tr>
+                            <th>שם הפריט</th>
+                            <th>זמינות</th>
+                            <th>בשימוש</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr>
+                            <td>{{ item.item_name }}</td>
+                            <td>{{ item.query.filter_by(status='Available').count() }}</td>
+                            <td>{{ item.query.filter_by(status='Borrowed').count() }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="buttons-container">
+                <button onclick="window.print();" class="btn btn-primary">הדפס</button>
+                <button onclick="exportToExcel();" class="btn btn-primary">ייצוא כקובץ excel</button>
+
+                <br/>
+            </div>    
+        {% else %}
+            <p>No items found.</p>
+        {% endif %}
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/vfs_fonts.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/vfs_fonts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/pdfmake.min.js"></script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+    <script>
+        function exportToExcel() {
+            const table = document.getElementById('myTable');
+            const wb = XLSX.utils.table_to_book(table, { sheet: 'Sheet1' });
+
+            // Add color to Excel sheet
+            const ws = wb.Sheets.Sheet1;
+            const range = XLSX.utils.decode_range(ws['!ref']);
+            
+            // Set color for the first row
+            for (let C = range.s.c; C <= range.e.c; ++C) {
+                const cellAddress = XLSX.utils.encode_cell({ r: range.s.r, c: C });
+                const cell = ws[cellAddress];
+                cell.s = {
+                    fill: { fgColor: { rgb: 'C4D79B' } }, // Set foreground color
+                };
+            }
+
+            const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+            saveAsExcelFile(wbout, 'דו"ח סטטוס הפריטים במחסן.xlsx');
+        }
+
+        function saveAsExcelFile(data, filename) {
+            const blob = new Blob([data], { type: 'application/octet-stream' });
+            if (typeof window.navigator.msSaveBlob !== 'undefined') {
+                // For IE browser
+                window.navigator.msSaveBlob(blob, filename);
+            } else {
+                // For modern browsers
+                const link = document.createElement('a');
+                if (link.download !== undefined) {
+                    const url = URL.createObjectURL(blob);
+                    link.setAttribute('href', url);
+                    link.setAttribute('download', filename);
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .table {
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        .table td, .table th {
+            word-wrap: break-word;
+        }
+
+        @media print {
+            .buttons-container {
+                display: none;
+            }
+        }
+    </style>
+
+    <script src="static/tablesort.js" charset="utf-8"></script>
+
+</body>    
+{% endblock %}

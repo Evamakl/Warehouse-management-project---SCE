@@ -1,0 +1,78 @@
+{% extends "base.html" %} {% block title %}הגדרת פריטים כתקולים{% endblock %}
+
+{% block style %}
+<script>
+    function returnFromRepair(rep_id) {
+        window.location.href = "/return_item/" + rep_id;
+    }
+</script>
+<link rel="stylesheet" href="static/add_item.css"/>
+{% endblock %}
+
+
+{% block content %}
+<body>
+    
+    <div class="table_container container" style="margin-top: 30px;">
+        <h3>בחר פריט מהרשימה</h3>
+        <table class="table table-sortable table-hover">
+            <thead>
+                <tr class="table_head">
+                    <th>#</th>
+                    <th>מק"ט</th>
+                    <th>שם פריט</th>
+                    <th>סוג פריט</th>
+                    <th>תיאור פריט</th>
+                    <th>סטטוס</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                    <tr onclick="window.location.href='/show_item/{{item.id}}'">
+                        <td scope="row">{{ item.id }}</td>
+                        <td>{{ item.item_ID }}</td>
+                        <td>{{ item.item_name }}</td>
+                        <td>{{ item.item_type }}</td>
+                        <td>{{ item.item_desc }}</td>
+                        <td>{{ item.status }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <hr>
+    <div class="table_container container">
+        <h3>פריטים תקולים הנמצאים בתיקון</h3>
+        <table class="table table-sortable table-hover">
+            <thead>
+                <tr class="table_head">
+                    <th>#</th>
+                    <th>מק"ט</th>
+                    <th>שם פריט</th>
+                    <th>תקול מתאריך</th>
+                    <th>סטטוס</th>
+                    <th>פעולה</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rep in reps %}
+                    {% if rep.status != 'Returned' %}
+                        <tr>
+                            <td scope="row">{{ rep.id }}</td>
+                            <td>{{ rep.item_id }}</td>
+                            <td>{{ rep.item_name }}</td>
+                            <td>{{ rep.repair_date }}</td>
+                            <td>{{ rep.status }}</td>
+                            <td><button class="btn btn-outline-dark" onclick="returnFromRepair({{ rep.id }})">החזר פריט</button></td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script src="static/tablesort.js" charset="utf-8"></script>
+</body>
+
+
+{% endblock %}

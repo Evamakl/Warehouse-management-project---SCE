@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}
+   דו"ח הזמנת ציוד למחסן
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="static/add_item.css"/>
+{% endblock %}
+
+
+{% block content %}
+<body class="">
+    <div class="form_container container">
+        {% if items %}
+            <div class="table_container container">
+                <table class="table table-sortable table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>שם פרטי</th>
+                            <th>שם משפחה</th>
+                            <th>מספר נייד</th>
+                            <th>שם הפריט</th>
+                            <th>סיבה</th>
+                            <th>כמות</th>
+                            <th>סטטוס</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                            <tr>
+                                <td scope="row">{{ item.id }}</td>
+                                <td>{{ item.user_first_name }}</td>
+                                <td>{{ item.user_last_name }}</td>
+                                <td>{{ item.user_phone_number }}</td>
+                                <td>{{ item.item_name }}</td>
+                                <td>{{ item.reason }}</td>
+                                <td>{{ item.amount }}</td>
+                                <td>
+                                    {% if item.status == 'מאושר' %} מאושר
+                                    {% elif item.status == 'נדחה' %} נדחה
+                                    {% elif item.status == 'הוזמן' %} הוזמן
+                                    {% elif item.status == 'במחסן' %} נמצא במחסן
+                                    {% else %}
+                                        {{ item.status }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- Buttons for printing and saving as Excel -->
+            <div class="buttons-container">
+                <button onclick="window.print();" class="btn btn-primary">הדפס</button>
+                <h6>על מנת להוריד את הקובץ יש ללחוץ על כפתור ההדפסה ולבחור שם שמירה כ-PDF</h6>
+                <br/>
+            </div>    
+            <div class="chart-container">
+                <canvas id="myChart"></canvas>
+            </div>
+        {% else %}
+            <p>.לא בוצעו הזמנות ציוד למחסן, ולא התקבלו בקשות להמלצת ציוד מסויים</p>
+        {% endif %}
+    </div>
+    <canvas id="myChart"></canvas>
+    <script src="static/tablesort.js" charset="utf-8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var statusData = {
+            labels: ["מאושר", "נדחה", "הוזמן", "במחסן"],
+            datasets: [{
+                label: 'כמות ההזמנות',
+                data: [
+                    {% for status, amount in status_counts %}
+                        {{ amount }},
+                    {% endfor %}
+                ],
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.5)',
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(255, 206, 86, 0.5)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+    
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: statusData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    המלצות על פריטים חדשים
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="static/add_item.css"/>
+{% endblock %}
+
+{% block content %}
+<body class="">
+    <div class="form_container container">
+        {% if recommended_items %}
+            <h1>בקשות המלצה על פריטים חדשים</h1>
+            <form method="POST" action="{{ url_for('recommend_item_admin') }}">
+                <div class="table_container container">
+                    <table class="table table-sortable table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>שם פרטי של המזמין</th>
+                                <th>שם משפחה של המזמין</th>
+                                <th>מספר טלפון של המזמין</th>
+                                <th>שם הפריט</th>
+                                <th>סיבת המלצה</th>
+                                <th>כמות מומלצת</th>
+                                <th>סטטוס</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for request in recommended_items %}
+                                <tr>
+                                    <td scope="row">{{ request.id }}</td>
+                                        <td>{{request.user_first_name }}</td>
+                                        <td>{{request.user_last_name }}</td>
+                                        <td>{{request.user_phone_number }}</td>
+                                        <td>{{ request.item_name }}</td>
+                                        <td>{{ request.reason }}</td>
+                                        <td>{{ request.amount }}</td>
+                                        <td><select name="status-{{ request.id }}">
+                                            <option value="לטיפול" {% if request.status == 'לטיפול' %}selected{% endif %}>יש לבצע</option>
+                                            <option value="מאושר" {% if request.status == 'מאושר' %}selected{% endif %}>מאושר</option>
+                                            <option value="נדחה" {% if request.status == 'נדחה' %}selected{% endif %}>נדחה</option>
+                                            <option value="הוזמן" {% if request.status == 'הוזמן' %}selected{% endif %}>הוזמן</option>
+                                            <option value="במחסן" {% if request.status == 'במחסן' %}selected{% endif %}>נמצא במחסן</option>
+                                            </select>
+                                        </td>     
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>    
+                <button type="submit">שמור שינויים</button>
+            </form>
+        {% else %}
+            <p>אין בקשות המלצה.</p>
+            <p>לא נמצאו פריטים בהמלצה.</p>
+        {% endif %}
+
+    </div>
+    <script src="static/tablesort.js" charset="utf-8"></script>
+</body>
+
+{% endblock %}

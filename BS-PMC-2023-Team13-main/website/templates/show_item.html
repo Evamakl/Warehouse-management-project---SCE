@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% block title %}
+   מידע על פריט
+{% endblock %}
+
+{% block style %}
+<script>
+    function sendToRepair(requestId) {
+      window.location.href = "/repair_item/" + requestId;
+    }
+    function returnFromRepair(requestId) {
+      window.location.href = "/return_item/" + requestId;
+    }
+  </script>
+<style>
+body{
+    background:#eee;
+}
+.card {
+    box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
+}
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 0 solid rgba(0,0,0,.125);
+    border-radius: 1rem;
+}
+.text-reset {
+    --bs-text-opacity: 1;
+    color: inherit!important;
+}
+a {
+    color: #5465ff;
+    text-decoration: none;
+}
+
+
+.my-btn-class-39 { border: medium none; display: inline-block; text-align: center; cursor: pointer; text-transform: uppercase; outline: none; overflow: hidden; position: relative; color: rgb(255, 255, 255); font-weight: 700; font-size: 15px; background-color: rgb(34, 34, 34); padding: 1rem 3rem; margin-left: 5px; box-shadow: rgba(143, 120, 120, 0.514) 0px 5px 15px; }
+.my-btn-class-39:hover { background: none; }
+.my-btn-class-39 span { position: relative; z-index: 1; }
+.my-btn-class-39::after { content: ""; position: absolute; left: 0px; top: 0px; height: 490%; width: 140%; background: rgb(41, 190, 48); transition: all 0.5s ease-in-out 0s; transform: translateX(-98%) translateY(-25%) rotate(45deg); }
+.my-btn-class-39:hover::after { transform: translateX(-9%) translateY(-25%) rotate(45deg); }
+
+
+  </style>
+{% endblock %}
+
+{% block content %}
+<body>
+    <div class="container-fluid">
+
+        <div class="container">
+          <!-- Title -->
+          <div class="d-flex justify-content-between align-items-center py-3">
+            <h2 class="h5 mb-0"><a href="#" class="text-muted"></a>פעולות על פריט</h2>
+          </div>
+        
+          <!-- Main content -->
+          <div class="row">
+            <div class="col-lg-8">
+              <!-- Details -->
+              <div class="card mb-4">
+                <div class="card-body">
+                  <div class="mb-3 d-flex justify-content-between">
+                    <div>
+                        <span class="me-3">מק"ט פריט: {{item.id}} |</span>
+                      <span class="me-3">סטטוס: {{item.status}}</span>
+                      <hr>
+                    </div>
+                  </div>
+                  <table class="table table-borderless">
+                    <tfoot>
+                      <tr style="text-align: right;">
+                        <td colspan="2">מזהה פריט</td>
+                        <td class="text-end"> {{item.id}}</td>
+                      </tr>
+                      <tr style="text-align: right;">
+                        <td colspan="2"> מק"ט זיהוי משני</td>
+                        <td class="text-end"> {{item.item_ID}}</td>
+                      </tr>
+                      <tr style="text-align: right;">
+                        <td colspan="2">שם פריט</td>
+                        <td class="text-end">{{item.item_name}}</td>
+                      </tr>
+                      <tr style="text-align: right;">
+                        <td colspan="2">סוג פריט</td>
+                        <td class="text-end">{{item.item_name}}</td>
+                      </tr>
+                      <tr class="fw-bold" style="text-align: right;">
+                        <td colspan="2">תיאור הפריט</td>
+                        <td class="text-end">{{item.item_desc}}</td>
+                      </tr>
+                      <tr class="fw-bold" style="text-align: right;">
+                        <td colspan="2">סטטוס פריט</td>
+                        <td class="text-end">{{item.status}}</td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+
+              <div class="card mb-4">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-lg-10"> 
+                        {% if item.status == 'Under Repair' %}
+                            <button class="my-btn my-btn-class-39" onclick="returnFromRepair({{ item.id }})">החזר פריט מתיקון
+                            </button>
+                        {% elif item.status == 'Available' %}
+                          <button class="my-btn my-btn-class-39" onclick="sendToRepair({{ item.id }})">שלח פריט לתיקון
+                          </button>
+                        {% else %}
+                          <h4>הפריט מושאל, לא ניתן לבצע פעולות.</h4>
+                        {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+        
+</body>
+{% endblock %}

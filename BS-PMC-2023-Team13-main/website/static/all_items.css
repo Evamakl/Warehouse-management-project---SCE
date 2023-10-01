@@ -1,0 +1,136 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+h1{
+    margin-bottom: 30px;;
+}
+
+  h3{
+    display: inline;
+    margin: 20px;
+  }
+
+  hr{
+    size: 2%;
+    width: 90%;
+    margin: 20px;
+  }
+
+  #header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+  }
+  #content {
+    padding: 10px;
+  }
+
+  table{
+    border-collapse: collapse;
+    width: 85%;
+    margin: 20px 130px 20px;
+    text-align: right;
+  }
+  .table-container{
+        padding: 2rem;
+        text-align: center;
+
+  }
+  
+  .table_head{
+    background-color: #0275d8;
+    color: white;
+}
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+
+  tbody tr:hover {
+    background-color: #cfcbcb75;
+  }
+  /*
+  th {
+    background-color: #f2f2f2;
+    color: #333;
+  }
+  */
+
+  /* Styling for status labels */
+  .label {
+    display: inline-block;
+    padding: 5px;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+  .pending {
+    background-color: #f2a900;
+    color: #fff;
+  }
+  .approved {
+    background-color: #0b7b14;
+    color: #fff;
+  }
+  .rejected {
+    background-color: #b30000;
+    color: #fff;
+  }
+
+  .canceled {
+    background-color: #b30000;
+    color: #fff;
+  }
+
+  .closed {
+    background-color: #0b7b14;
+    color: #fff;
+  }
+
+  .link {
+      display: inline-block;
+      padding: 5px;
+      border-radius: 5px;
+      background-color: #6c6c6c;
+      color: #fff;
+      text-decoration: none;
+      margin-right: 5px;
+    }
+
+.container {
+max-width: 1200px;
+margin: 0 auto;
+padding: 20px;
+}
+
+
+.search-container {
+margin-bottom: 20px;
+}
+
+.search-container input[type=text] {
+padding: 10px;
+font-size: 16px;
+border: none;
+width: 70%;
+background-color: #f2f2f2;
+border-radius: 5px 0 0 5px;
+}
+
+.search-container button {
+float: right;
+width: 30%;
+padding: 10px;
+background-color: #333;
+color: #fff;
+font-size: 16px;
+border: none;
+border-radius: 0 5px 5px 0;
+cursor: pointer;
+}
+
+.search-container button:hover {
+background-color: #555;
+}

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}
+    פריטים
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="static/all_items.css"/>
+{% endblock %}
+
+{% block content %}
+<body>
+    <div class="table-container">
+      <h1>בחר מוצר מהרשימה אותו תרצה להשאיל</h1>
+      <hr>
+      <div class="header">
+        <form action="{{ url_for('all_items') }}" method="GET">
+            <h3>חפש פריט: </h3>
+            <input type="text" name="search_query" placeholder="Search...">
+            <button type="submit">חפש</button>
+        </form>
+      </div>
+        <table>
+            <thead>
+                <tr class="table_head">
+                    <th>#</th>
+                    <th>מק"ט</th>
+                    <th>שם פריט</th>
+                    <th>סוג</th>
+                    <th>תיאור הפריט</th>
+                    <th>סטטוס</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                    {% if item.status not in ['Under Repair'] %}
+                        <tr onclick="window.location.href='/item/{{ item.id }}'">
+                            <td>{{ item.id }}</td>
+                            <td>{{ item.item_ID }}</td>
+                            <td>{{ item.item_name }}</td>
+                            <td>{{ item.item_type }}</td>
+                            <td>{{ item.item_desc }}</td>
+                            <td>{{ item.status }}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+{% endblock %}

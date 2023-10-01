@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}
+    ההודעות שלי
+{% endblock %}
+
+{% block style %}
+<script>
+    function readMsg(msg_id){
+        window.location.href = "/read_msg_m/" + msg_id;
+    }
+    function delMsg(msg_id){
+        window.location.href = "/del_msg_m/" + msg_id;
+    }
+</script>
+<link rel="stylesheet" href="static/add_item.css"/>
+{% endblock %}
+
+{% block content %}
+<body>
+    <div class="table_container container">
+        <h1>כל ההודעות</h1>
+        <table class="table table-sortable table-hover">
+            <thead>
+                <tr class="table_head">
+                    <th>#</th>
+                    <th>תאריך</th>
+                    <th>הודעה</th>
+                    <th>פעולות</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for msg in user.messages %}
+                    {% if msg.status == "Sent" %}
+                        {% if msg.flag == 3 %}
+                            <tr style="background-color: rgba(84, 228, 115, 0.651);">
+                                <td scope="row">{{ msg.id }}</td>
+                                <td>{{ msg.msg_date }}</td>
+                                <td>{{ msg.message }}</td>
+                                <td><button onclick="readMsg({{msg.id}})"><i class="fas fa-check-circle"></i></button><span> | </span><button onclick="confirmDelete({{msg.id}})"><i class="fa-solid fa-trash-can"></i></button></td>
+                            </tr>
+                        {% elif msg.flag == 0 %}
+                            <tr style="background-color: rgba(247, 0, 0, 0.466);">
+                                <td scope="row">{{ msg.id }}</td>
+                                <td>{{ msg.msg_date }}</td>
+                                <td>{{ msg.message }}</td>
+                                <td><button onclick="readMsg({{msg.id}})"><i class="fas fa-check-circle"></i></button><span> | </span><button onclick="confirmDelete({{msg.id}})"><i class="fa-solid fa-trash-can"></i></button></td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td scope="row">{{ msg.id }}</td>
+                                <td>{{ msg.msg_date }}</td>
+                                <td>{{ msg.message }}</td>
+                                <td><button onclick="readMsg({{msg.id}})"><i class="fas fa-check-circle"></i></button><span> | </span><button onclick="confirmDelete({{msg.id}})"><i class="fa-solid fa-trash-can"></i></button></td>
+                            </tr>
+                        {% endif %}
+                    {% else %}
+                        <tr style="background-color: rgba(148, 148, 148, 0.575);">
+                            <td scope="row">{{ msg.id }}</td>
+                            <td>{{ msg.msg_date }}</td>
+                            <td>{{ msg.message }}</td>
+                            <td><button onclick="confirmDelete({{msg.id}})"><i class="fa-solid fa-trash-can"></i></button></td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                
+            </tbody>
+        </table>
+        <div><i class="fa-solid fa-square" style="color: rgba(148, 148, 148, 0.575); text-shadow: 0 0 3px #000;"></i> - הודעות שנקראו</div>
+        <div><i class="fa-solid fa-square" style="color: rgb(255, 255, 255); text-shadow: 0 0 3px #000;"></i> - הודעות שלא נקראו</div>
+    </div>
+    <script>
+        function confirmDelete(id) {
+           var confirmed = confirm("האם את/ה בטוח/ה שאת/ה רוצה למחוק את ההודעה?");
+           if (confirmed) {
+               // User confirmed the deletion, perform the delete operation here
+               delMsg(id);
+           }
+        }
+        function readMsg(msg_id){
+        window.location.href = "/read_msg_m/" + msg_id;
+    }
+
+   </script>
+</body>
+{% endblock %}

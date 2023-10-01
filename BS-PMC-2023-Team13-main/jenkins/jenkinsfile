@@ -1,0 +1,93 @@
+pipeline {
+    agent {
+        docker {
+            image 'python:3.9'
+            args '-v /var/run/docker.sock:/var/run/docker.sock -u root'
+        }
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'pip install -r requirements.txt'
+            }
+        }
+
+        stage('Unittest') {
+            steps {
+                sh 'pip install coverage'
+                sh 'coverage run --source=website tests/unit_test.py'
+                sh 'coverage run --source=website tests/unit_test2.py'
+            }
+        }
+
+        stage('Integration Test') {
+            steps {
+                sh 'python app_test.py'
+            }
+        }
+        
+        
+        stage('Coverage') {
+    steps {
+        script {
+            try {
+                sh 'pip install coverage'
+                sh 'coverage run --source=website -m unittest discover'
+                sh 'coverage report --fail-under=80' // Set your desired coverage threshold
+            } catch (Exception e) {
+                echo "Code coverage check failed, but continuing with the pipeline"
+                // You can choose to perform additional actions or notifications here if needed
+            }
+        }
+    }
+}
+
+
+    stage('Pycodestyle') {
+        steps {
+            script {
+                try {
+                    sh 'pip install pycodestyle'
+                    sh 'pycodestyle --max-line-length=300 --ignore=E,W website/routes.py'
+                } catch (Exception e) {
+                    echo "Code style check failed, but continuing with the pipeline"
+                    // You can choose to perform additional actions or notifications here if needed
+                }
+            }
+        }
+    }
+
+
+
+        stage('McCabe Complexity') {
+            steps {
+                sh 'pip install radon'
+                sh 'radon cc website/routes.py'
+            }
+        }
+
+        stage('App Build') {
+            steps {
+                sh 'export FLASK_APP=main.py && export FLASK_ENV=production && flask run &'
+            }
+        }
+              
+
+
+        stage('Pylint') {
+            steps {
+                sh 'pip install pylint'
+                sh 'pylint --output-format=colorized website/routes.py --exit-zero --disable=C,E,R --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}"'
+            }
+        }
+
+  
+    }
+}

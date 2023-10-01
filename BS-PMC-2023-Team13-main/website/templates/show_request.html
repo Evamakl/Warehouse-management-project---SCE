@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% block title %}
+   ההזמנות שלי
+{% endblock %}
+
+{% block style %}
+<script>
+  function approveRequest(requestId) {
+    window.location.href = "/approve_request/" + requestId;
+  }
+  function completeRequest(requestId) {
+    window.location.href = "/complete_request/" + requestId;
+  }
+  function activatedRequest(requestId) {
+    window.location.href = "/activate_request/" + requestId;
+  }
+  function cancelRequest(requestId){
+    window.location.href = "/cancel_request/" + requestId;
+
+  }
+</script>
+<style>
+body{
+    background:#eee;
+}
+.card {
+    box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
+}
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 0 solid rgba(0,0,0,.125);
+    border-radius: 1rem;
+}
+.text-reset {
+    --bs-text-opacity: 1;
+    color: inherit!important;
+}
+a {
+    color: #5465ff;
+    text-decoration: none;
+}
+
+
+.my-btn-class-39 { border: medium none; display: inline-block; text-align: center; cursor: pointer; text-transform: uppercase; outline: none; overflow: hidden; position: relative; color: rgb(255, 255, 255); font-weight: 700; font-size: 15px; background-color: rgb(34, 34, 34); padding: 1rem 3rem; margin-left: 5px; box-shadow: rgba(143, 120, 120, 0.514) 0px 5px 15px; }
+.my-btn-class-39:hover { background: none; }
+.my-btn-class-39 span { position: relative; z-index: 1; }
+.my-btn-class-39::after { content: ""; position: absolute; left: 0px; top: 0px; height: 490%; width: 140%; background: rgb(41, 190, 48); transition: all 0.5s ease-in-out 0s; transform: translateX(-98%) translateY(-25%) rotate(45deg); }
+.my-btn-class-39:hover::after { transform: translateX(-9%) translateY(-25%) rotate(45deg); }
+
+
+  </style>
+{% endblock %}
+
+{% block content %}
+<body>
+    <div class="container-fluid">
+
+        <div class="container">
+          <!-- Title -->
+          <div class="d-flex justify-content-between align-items-center py-3">
+            <h2 class="h5 mb-0"><a href="#" class="text-muted"></a>בקשה להשאלת ציוד</h2>
+          </div>
+        
+          <!-- Main content -->
+          <div class="row">
+            <div class="col-lg-8">
+              <!-- Details -->
+              <div class="card mb-4">
+                <div class="card-body">
+                  <div class="mb-3 d-flex justify-content-between">
+                    <div>
+                        <span class="me-3">מזהה בקשה: {{context.get('user_request').id}} |</span>
+                      <span class="me-3">נפתחה בתאריך: {{context.get('user_request').opened_on.strftime('%d/%m/%Y')}} |</span>
+                      <span class="me-3">סטטוס: {{context.get('user_request').status}}</span>
+                      <hr>
+                    </div>
+                  </div>
+                  <table class="table table-borderless">
+                    <tfoot>
+                      <tr style="text-align: right;">
+                        <td colspan="2">מזהה פריט</td>
+                        <td class="text-end"> {{context.get('user_request').loan_request_item.id}}</td>
+                      </tr>
+                      <tr style="text-align: right;">
+                        <td colspan="2"> מק"ט זיהוי משני</td>
+                        <td class="text-end"> {{context.get('user_request').loan_request_item.item_ID}}</td>
+                      </tr>
+                      <tr style="text-align: right;">
+                        <td colspan="2">קטגורית פריט</td>
+                        <td class="text-end">{{context.get('user_request').loan_request_item.item_name}}</td>
+                      </tr>
+                      <tr style="text-align: right;">
+                        <td colspan="2">קטגורית פריט</td>
+                        <td class="text-end">{{context.get('user_request').loan_request_item.item_name}}</td>
+                      </tr>
+                      <tr class="fw-bold" style="text-align: right;">
+                        <td colspan="2">תיאור הפריט</td>
+                        <td class="text-end">{{context.get('user_request').loan_request_item.item_desc}}</td>
+                      </tr>
+                      <tr class="fw-bold" style="text-align: right;">
+                        <td colspan="2">סטטוס פריט</td>
+                        <td class="text-end">{{context.get('user_request').loan_request_item.status}}</td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+
+              <div class="card mb-4">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-lg-6" style="text-align: center;">
+                      <h3 class="h6"><strong>תאריך ההשאלה:</strong></h3>
+                      <address>
+                        {{context.get('user_request').borrowing_date.strftime('%d/%m/%Y')}}<br>
+                        {{context.get('user_request').borrowing_date.strftime('%H:%M')}}
+                      </address>
+                    </div>
+                    <div class="col-lg-6" style="text-align: center;">
+                      <h3 class="h6"><strong>תאריך ההחזרה:</strong></h3>
+                      <address>
+                        {{context.get('user_request').return_date.strftime('%d/%m/%Y')}}<br>
+                        {{context.get('user_request').return_date.strftime('%H:%M')}}
+                      </address>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-10">
+                      {% if context.get('user_request').status in ['Canceled', 'Completed'] %}
+                        <h4>ההזמנה נמצאת בסטטוס: {{context.get('user_request').status}}</h4>
+                      {% elif context.get('user_request').status in ['Activated'] %}
+                          <button class="my-btn my-btn-class-39" onclick="completeRequest({{ context.get('user_request').id }})">דווח על החזרת הציוד
+                          </button>
+                      {% elif context.get('user_request').status in ['Approved'] %}
+                      <button class="my-btn my-btn-class-39" onclick="activatedRequest({{ context.get('user_request').id }})">התחל השאלת ציוד
+                      </button>
+                      {% elif context.get('conflicting_request') %}
+                      <p>קיימת התנגשות עם הזמנות שכבר אושרו:</p>
+                        {% for req in context.get('conflicting_request').all() %}
+                          <p style="color: red;">| Request ID: {{ req.id }} | FROM: {{ req.borrowing_date.strftime('%d/%m/%Y %H:%M') }} | TO: {{ req.return_date.strftime('%d/%m/%Y %H:%M') }} |</p>
+                        {% endfor %}
+                      {% else %}
+                        <button class="my-btn my-btn-class-39" onclick="approveRequest({{ context.get('user_request').id }})">אשר השאלת ציוד
+                        </button>
+                        <button class="my-btn my-btn-class-39" onclick="cancelRequest({{ context.get('user_request').id }})">דחה את השאלה הציוד
+                        </button>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <!-- Customer Notes -->
+              <div class="card mb-4">
+                <div class="card-body" style="text-align: right;">
+                  <h3 class="h6">סיבת ההשאלה</h3>
+                  <hr>
+                  <p>{{context.get('user_request').reason_for_borrowing}}</p>
+                </div>
+              </div>
+              <div class="card mb-4">
+                <!-- Shipping information -->
+                <div class="card-body" style="text-align: right;">
+                  <h3 class="h6">פרטי קשר של יוצר הבקשה</h3>
+                  <hr>
+                    שם פרטי: <strong>{{context.get('user_request').loan_request_user.first_name }}</strong><br>
+                    שם משפחה: <strong>{{context.get('user_request').loan_request_user.last_name }}</strong><br>
+                    כתובת מייל: <strong>{{context.get('user_request').loan_request_user.email_address }}</strong><br>
+                    מספר פלאפון:  <strong>{{context.get('user_request').loan_request_user.phone_number }}</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+        
+</body>
+{% endblock %}

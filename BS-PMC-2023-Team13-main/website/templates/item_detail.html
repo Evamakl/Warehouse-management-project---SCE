@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %}
+    על הפריט
+{% endblock %}
+
+{% block style %}  
+
+<script>
+
+    function checkApproved(){
+    var check = document.getElementById("check");
+    var btn = document.getElementById("btn");
+
+    if(check.checked){
+        btn.removeAttribute("disabled");
+    }
+    else{
+        btn.disabled="true";
+    }
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<body class="text-center">
+    <div class="form_container container">
+        <h1>טופס בקשה להשאלת פריט מהמחסן</h1>
+        <h3>{{ context.get('item').item_name }} - {{ context.get('item').item_desc }}</h3>
+        <div style="
+        display:grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 20px; 
+        row-gap: 40px;
+        margin-top: 20px;
+        ">
+        <div style="text-align: right;">
+            <h4>כללים למילוי טופס:</h4>
+            <span class="text-danger">&#9679; תאריך ההשאלה/ההחזרה חייב להיות בין בהשעות 08:00 ועד 16:00</span><br>
+            <span class="text-danger">&#9679; לא ניתן להשאיל פריטים במרווח זמן הקטן משעה מעת שליחת הטופס</span><br>
+            <span class="text-danger">&#9679; לא ניתן להשאיל/להחזיר פריטים בימי שישי ושבת</span><br>
+            <span class="text-danger">&#9679; לא ניתן להשאיל פריט למרווח זמן הגדול משבוע ימים</span><br>
+            <span class="text-danger">&#9679; בסוף מילוי הבקשה יש לאשר את תקנון ההשאלה</span><br>
+        </div>
+        <form method="POST">
+            {{ context.get('form').csrt_token }}
+            {{ context.get('form').hidden_tag() }}
+            <div class="form-group">
+                {{ context.get('form').borrowing_date.label }}
+                {{ context.get('form').borrowing_date(class='form-control', type='datetime-local', id="borrowing_date") }}
+                {% for error in context.get('form').borrowing_date.errors %}
+                <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+            
+            <div class="form-group">
+                {{ context.get('form').return_date.label }}
+                {{ context.get('form').return_date(class='form-control', type='datetime-local', id="return_date" ) }} 
+                {% for error in context.get('form').return_date.errors %}
+                <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ context.get('form').reason_for_borrowing.label }}
+                {{ context.get('form').reason_for_borrowing(class='form-control') }}
+                {% for error in context.get('form').reason_for_borrowing.errors %}
+                <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+
+            <div class="form-group">
+                <input id="check" type="checkbox" onclick="checkApproved()"/>
+                <p>אני מאשר שבעת קבלת הפריט המבוקש אחריותו הבלעדית היא שלי ושמנהל המחסן רשאי לגבות סכום לפי הערכת הנזקים במקרה של החזרת פריט תקול</p>
+            </div>
+            {{ context.get('form').submit(class='btn btn-primary', disabled="true", id="btn") }}
+
+        </form>
+        </div>
+
+    </div>
+
+
+    <script src="static/loan_request.js" ></script>
+</body>
+{% endblock %}

@@ -1,0 +1,108 @@
+
+{% extends 'base.html' %}
+
+{% block title %}
+Returned Orders Report
+{% endblock %}
+
+{% block style %}
+<style>
+
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+
+    .container {
+        display: flex;
+        width: 100%;
+        max-width: 1200px;
+    }
+
+    .table-section {
+        flex: 1;
+        margin-left: auto;
+    }
+
+    .graph-section {
+        flex: 1;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f5f5f5;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+
+    .search-form {
+        margin-bottom: 50px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .pdf-button {
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
+    }
+    .requests-container
+    {
+        width:60%;
+        position: relative;
+        right: 20%;
+    }
+    @media print {
+        .pdf-button {
+            display: none;
+        }
+    }
+
+    
+.my-btn-class-39 { border: medium none; display: inline-block; text-align: center; cursor: pointer; text-transform: uppercase; outline: none; overflow: hidden; position: relative; color: rgb(255, 255, 255); font-weight: 700; font-size: 15px; background-color: rgb(34, 34, 34); padding: 1rem 3rem; margin-left: 5px; box-shadow: rgba(143, 120, 120, 0.514) 0px 5px 15px; }
+.my-btn-class-39:hover { background: none; }
+.my-btn-class-39 span { position: relative; z-index: 1; }
+.my-btn-class-39::after { content: ""; position: absolute; left: 0px; top: 0px; height: 200%; width: 50%; background: rgb(41, 190, 48); transition: all 0.5s ease-in-out 0s; transform: translateX(-98%) translateY(-25%) rotate(45deg); }
+.my-btn-class-39:hover::after { transform: translateX(-9%) translateY(-25%) rotate(45deg); }
+
+
+</style>
+<link rel="stylesheet" href="static/dashboard.css">
+<link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+
+{% endblock %}
+
+{% block content %}
+<br>
+<body>
+    <div class="requests-container">
+        <h1>עלינו</h1>
+        <h2>ברוכים הבאים למחסן של המחלקה לתקשורת חזותית!</h2>
+        <p>האתר WH-Organization נוצר על מנת ליעיל את אופן השאלות הציוד בין אנשי המחלקה לתקשורת </p>
+        <p>חזותית לבין מנהלי מחסן המחלקה. האתר מספק פלטפורמה נוחה לפתיחת בקשות לאישורם ולמעקבם.</p>
+        <p>מפתחי האתר: Klassen Eva-Maria , Moiseyev Ester,Dali Yarden, Abitbul Gilad </p>
+        <p>אנשי מחסן המחלקה:  {המייל של שי }</p>
+    <footer>
+        <p>&copy; 2023 המחלקה להנדסת תוכנה.</p>
+    </footer>
+</div>
+</body>
+
+
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}
+   ההזמנות שלי
+{% endblock %}
+{% block style %}
+<link rel="stylesheet" href="static/my_orders.css"/>
+{% endblock %}
+
+{% block content %}
+<body>
+    <div id="header" style="text-align:right;">
+        <h1>יומן פעילות</h1>
+    </div>
+    <div id="content" style="text-align:right;">
+        <h2>הבקשות שלי</h2>
+        {% if requests %}
+        <table>
+            <thead >
+            <tr>
+                <th style="text-align:right;">מזהה הזמנה</th>
+                <th style="text-align:right;">שם הפריט</th>
+                <th style="text-align:right;">תאור</th>
+                <th style="text-align:right;">תאריך פתיחת הבקשה</th>
+                <th style="text-align:right;">תאריך ההשאלה</th>
+                <th style="text-align:right;">תאריך ההחזרה</th>
+                <th style="text-align:right;">סטטוס</th>
+                <th style="text-align:right;">פעולות</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for request in requests %}
+                <tr>
+                <td style="text-align:right;"> {{request.id}} </td>
+                <td style="text-align:right;">{{ request.loan_request_item.item_name }}</td>
+                <td style="text-align:right;">{{ request.loan_request_item.item_desc }}</td>
+                <td style="text-align:right;">{{ request.opened_on.strftime('%d/%m/%Y') }}</td>
+                <td style="text-align:right;">{{ request.borrowing_date.strftime('%d/%m/%Y') }}</td>
+                <td style="text-align:right;">{{ request.return_date.strftime('%d/%m/%Y') }}</td>
+                <td style="text-align:right;"><span class="label {{ request.status|lower }}">{{ request.status }}</span></td>
+                <td style="text-align:center;">
+                    {% if request.status == 'נשלח לאישור' %}
+                    <a href="{{ url_for('edit_request', request_id=request.id) }}" >ערוך</a> | 
+                    <a href="{{ url_for('cancel_request', request_id=request.id) }}" >בטל</a>
+                    {% endif %}
+                </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>You have no loan requests.</p>
+        {% endif %}
+    </div>
+</body>
+{% endblock %}

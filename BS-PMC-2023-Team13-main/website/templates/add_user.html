@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}
+    Users
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="static/add_item.css"/>
+{% endblock %}
+
+
+
+{% block content %}
+</body>
+<body class="text-center">
+    <br>
+    <h1>הוספת משתמשים</h1>
+
+    <div class="form_container container">
+        <h5>אם ברצונך להוסיף משתמש יחיד, אנא לחץ על הוסף ידנית. </h5>
+        <h5>על מנת להוסיף כמה משתמשים למערכת יש ללחוץ על הוסף מקובץ. </h5>
+
+        <input type="button" class="btn btn-primary" onclick="document.location.href = '{{ url_for('add_manually') }}'" value="הוסף ידנית"/>
+        <input type="button" class="btn btn-primary" onclick="document.location.href = '{{ url_for('upload_page') }}'" value="הוסף מקובץ"/>
+    </div>
+</body>
+{% endblock %}
+<!---->

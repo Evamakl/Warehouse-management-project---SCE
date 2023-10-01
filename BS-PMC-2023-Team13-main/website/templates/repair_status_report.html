@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}
+    Repairs Report
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="static/add_item.css"/>
+{% endblock %}
+
+{% block content %}
+<body class="">
+    <h1>דו"ח פריטים תקולים</h1>
+    <div class="form_container container">
+        {% if reps %}
+            <div class="table_container container">
+                <table class="table table-sortable table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>מק"ט</th>
+                            <th>שם פריט</th>
+                            <th>תאריך תיקון</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in reps %}
+                        <tr>
+                            <td>{{ item.id }}</td>
+                            <td>{{ item.item_id }}</td>
+                            <td>{{ item.item_name }}</td>
+                            <td>{{ item.repair_date }}</td>
+
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="buttons-container">
+                <button onclick="window.print();" class="btn btn-primary">הדפס</button>
+                <h6>על מנת להוריד את הקובץ יש ללחוץ על כפתור ההדפסה ולבחור שם שמירה כ-PDF</h6>
+                <br/>
+            </div>    
+        {% else %}
+            <p>לא נמצאו פריטים</p>
+        {% endif %}
+    </div>
+    <script src="static/tablesort.js" charset="utf-8"></script>
+    <style>
+		@media print {
+            /* Hide the buttons */
+            .btn.btn-primary {
+                display: none;
+			
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            
+            .table {
+                width: 100%;
+                table-layout: fixed;
+            }
+            
+            .table td, .table th {
+                word-wrap: break-word;
+            }
+
+
+
+	</style>
+</body>    
+{% endblock %}

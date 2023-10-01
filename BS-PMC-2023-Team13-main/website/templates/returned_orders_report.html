@@ -1,0 +1,260 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Returned Orders Report
+{% endblock %}
+
+{% block style %}
+<style>
+    .bodyA {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        display: flex;
+        justify-content: center;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+
+    .container {
+        display: flex;
+        width: 100%;
+        max-width: 1200px;
+    }
+
+    .table-section {
+        flex: 1;
+        margin-left: auto;
+    }
+
+    .graph-section {
+        flex: 1;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f5f5f5;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+
+    .search-form {
+        margin-bottom: 50px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .pdf-button {
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    @media print {
+        .pdf-button {
+            display: none;
+        }
+    }
+
+    
+.my-btn-class-39 { border: medium none; display: inline-block; text-align: center; cursor: pointer; text-transform: uppercase; outline: none; overflow: hidden; position: relative; color: rgb(255, 255, 255); font-weight: 700; font-size: 15px; background-color: rgb(34, 34, 34); padding: 1rem 3rem; margin-left: 5px; box-shadow: rgba(143, 120, 120, 0.514) 0px 5px 15px; }
+.my-btn-class-39:hover { background: none; }
+.my-btn-class-39 span { position: relative; z-index: 1; }
+.my-btn-class-39::after { content: ""; position: absolute; left: 0px; top: 0px; height: 200%; width: 50%; background: rgb(41, 190, 48); transition: all 0.5s ease-in-out 0s; transform: translateX(-98%) translateY(-25%) rotate(45deg); }
+.my-btn-class-39:hover::after { transform: translateX(-9%) translateY(-25%) rotate(45deg); }
+
+
+</style>
+
+
+{% endblock %}
+
+{% block content %}
+<br>
+
+<body>
+
+    <h1>דו"ח החזרות</h1><br>
+    <br><br>
+ 
+    <div class="container-fluid">
+        <div class="table-section" >
+            <div class="card mb-4">
+                <!-- Shipping information -->
+                <div class="card-body" style="text-align: right;">
+                    <form class="search-form" method="post">
+                      <label for="return-date"><h5>חיפוש לפי תאריך  החזרה:</h5></label>
+                      <input type="date" id="return-date" name="return-date" style="width: 900px;">
+                      <button class="btn btn-primary" type="submit">חפש</button>
+                    </form>
+            </div>
+        </div>
+            <div class="card mb-4">
+                <!-- Shipping information -->
+                <div class="card-body" style="text-align: right;">
+                    <div class="pdf-button">
+
+                        <button  class="btn btn-primary" onclick="exportToExcel()">ייצא ל-Excel</button>
+
+                        <!-- <button class="my-btn-class-39" onclick="generatePDF()">Save as PDF</button> -->
+                        <button class="btn btn-primary" onclick="printTable()">הדפס</button>
+
+                    </div>
+                </div>
+
+            </div>
+                  <!-- Details -->
+                  <div class="card mb-4">
+                    <div class="card-body">
+                        <table class="table table-borderless" id="myTable" >
+                            <div class="mb-3 d-flex justify-content-between"">
+                                <thead>
+                                    <tr style="text-align: right;">
+                                        <th style="text-align:right;">מספר ההזמנה</th>
+                                        <th style="text-align:right;">הפריט</th>
+                                        
+                                        <th style="text-align:right;">תאריך ההחזרה</th>
+                                        <th style="text-align:right;">סיבת ההשאלה</th>
+                                        
+                                    </tr>
+                                </thead>
+                            </div>
+                            <tbody id="data-body">
+                                {% if orders %}
+                                {% for order, item in orders %}
+                                <tr >
+                                    <td class="text-end" style="text-align:right;">{{ order.id }}</td>
+                                    <td class="text-end" style="text-align:right;">{{ item.item_name }}</td>
+                                    
+                                    <td class="text-end" style="text-align:right;">{{ order.return_date }}</td>
+                                    <td class="text-end" style="text-align:right;">{{ order.reason_for_borrowing }}</td>
+                                    
+                                </tr>
+                                {% endfor %}
+                                {% else %}
+                                <tr style="text-align: center;">
+                                    <td colspan="4">לא נמצאו רשומות.</td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+            </div>
+
+          
+        </div>
+                    <div class="graph-section">
+                        <canvas id="bar-chart"></canvas>
+                        <canvas id="pie-chart"></canvas>
+                    </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/vfs_fonts.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/vfs_fonts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/pdfmake.min.js"></script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+
+
+    <script>
+        function printTable() {
+           var tableSection = document.querySelector('.table-section');
+           var table = tableSection.querySelector('table');
+           var originalContents = document.body.innerHTML;
+           var tableContents = tableSection.innerHTML;
+     
+           // Remove the buttons from the table section
+           var pdfButton = tableSection.querySelector('.pdf-button');
+           pdfButton.remove();
+     
+           document.body.innerHTML = tableContents;
+           window.print();
+     
+           document.body.innerHTML = originalContents;
+        }
+
+        pdfMake.vfs = pdfFonts.pdfMake.vfs;
+pdfMake.fonts = {
+  HebrewFont: {
+    normal: 'HebrewFont-Regular.ttf',
+    bold: 'HebrewFont-Bold.ttf',
+    italics: 'HebrewFont-Italic.ttf',
+    bolditalics: 'HebrewFont-BoldItalic.ttf'
+  }
+};
+
+function exportToExcel() {
+  const table = document.getElementById('myTable');
+  const wb = XLSX.utils.table_to_book(table, { sheet: 'Sheet1' });
+
+  // Add color to Excel sheet
+  const ws = wb.Sheets.Sheet1;
+  const range = XLSX.utils.decode_range(ws['!ref']);
+  
+  // Set color for the first row
+  for (let C = range.s.c; C <= range.e.c; ++C) {
+    const cellAddress = XLSX.utils.encode_cell({ r: range.s.r, c: C });
+    const cell = ws[cellAddress];
+    cell.s = {
+      fill: { fgColor: { rgb: 'C4D79B' } }, // Set foreground color
+    };
+  }
+
+  const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+  saveAsExcelFile(wbout, 'returned_orders_report.xlsx');
+}
+
+
+
+function saveAsExcelFile(data, filename) {
+  const blob = new Blob([data], { type: 'application/octet-stream' });
+  if (typeof window.navigator.msSaveBlob !== 'undefined') {
+    // For IE browser
+    window.navigator.msSaveBlob(blob, filename);
+  } else {
+    // For modern browsers
+    const link = document.createElement('a');
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', filename);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  }
+}
+
+ 
+
+
+</script>
+<script src="static/tablesort.js" charset="utf-8"></script>
+
+</body>
+{% endblock %}
+

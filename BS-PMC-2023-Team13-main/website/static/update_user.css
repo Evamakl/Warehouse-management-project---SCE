@@ -1,0 +1,180 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+	* , :before , :after {
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+		font-family: inherit;
+	}
+
+
+	body {
+		font-family: "Poppins",sans-serif;
+	}
+	
+	.main {
+		height: 100vh;
+		width: 100%;
+		display: flex;
+		align-content: center;
+		align-items: center;
+		justify-content: center;
+		background: url(https://b7net.co.il/dyncontent/2020/10/14/3140a515-0abc-49d9-9700-4cdc7c383d7d.jpg);
+		transition: background-image 3s ease-in-out;
+		background-size: cover;
+		background-repeat: no-repeat;
+	}
+	@media (prefers-color-scheme: dark) {
+		.main {
+			background: url(https://www.sce.ac.il/filestock/file/1495975060666-0.jpg);
+			transition: background-image 3s ease-in-out;
+			background-size: cover;
+			background-repeat: no-repeat;
+		}
+	}
+	.login {
+		position: relative;
+		background: #686d6f7a;
+		padding: 35px 40px;
+		border-radius: 4px;
+		z-index: 1;
+		overflow: hidden;
+		box-shadow: 0px 12px 31px #ffffff52 , 0px 36px 31px #000000a1;
+		animation: login 0.88s ease;
+	}
+
+	.form-group {
+		text-align: right;
+	}
+
+	@keyframes login {
+		0% {
+			transform: translateY(-10%) scale(.8);
+			opacity: 0;
+		}
+		100% {
+			transform: scale(1);
+			opacity: 1;
+		}
+	}
+	.login:after {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 100%;
+		background: url(https://b7net.co.il/dyncontent/2020/10/14/3140a515-0abc-49d9-9700-4cdc7c383d7d.jpg);
+		width: 100%;
+		z-index: -1;
+		background-size: 182vh;
+		background-position: 28% , 83%;
+		filter: blur(24px);
+		background-repeat: no-repeat;
+		opacity: 0.8;
+	}
+	
+	.heading {
+		font-size: 24px;
+		font-weight: 400;
+		text-align: center;
+		margin-bottom: 18px;
+		color: white;
+	}
+	.input {
+		display: block;
+		margin-bottom: 13px;
+		margin-top: 11px;
+	}
+	.input label {
+		display: block;
+		margin-bottom: 3px;
+		font-size: 13px;
+		color: white;
+		cursor: pointer;
+	}
+	.input input {
+		width: 100%;
+		padding: 10px;
+		outline: none;
+		border: none;
+		font-size: 15px;
+		border-radius: 4px;
+		background: #0000002b;
+		color: white;
+		transition: all 0.2s ease;
+	}
+	.input input:hover {
+		background: #3d434c;
+	}
+	.input input:focus {
+		box-shadow: 0px 2px 2px #0000002b , 0px 5px 10px #00000036;
+		background: #434343;
+	}
+	.login-btn {
+		margin-top: 10px;
+		margin-bottom: 15px;
+		padding: 8px 15px;
+		font-size: 14px;
+		background: #00000038;
+		border: 2px solid #38363654;
+		color: #e1e1e1;
+		border-radius: 4px;
+		width: 100%;
+		transition: all 0.2s cubic-bezier(.79,.14,.15,.86);
+		cursor: pointer;
+	}
+	.login-btn:hover {
+		background: #0663b4;
+		transition: all 0.1s ease;
+	}
+	.login-btn:focus {
+		box-shadow: 0px 0px 0px 2px #a7a7a7b5;
+		background: #00000061;
+	}
+	.meta-text {
+		font-size: 13px;
+		margin-bottom: 15px;
+		color: white;
+	}
+	.social-icons {
+		text-align: center;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	.social-icon {
+		min-height: 40px;
+		background: var(--c);
+		margin-right: 10px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 40px;
+		max-width: 40px;
+		max-height: 40px;
+		border-radius: 28px;
+		box-shadow: 0px 4px 8px #0c0b0b00;
+		transition: all 0.2s ease;
+		border: none;
+		outline: none;
+	}
+	.social-icon:hover {
+		box-shadow: 0px 4px 14px #0000007a;
+	}
+	.social-icon:focus {
+		box-shadow: 0px 0px 0px 2px currentColor;
+		transform: scale(.9);
+	}
+	.social-icon * {
+		pointer-events: none;
+		fill: #fff;
+	}
+	.social-icon.fb {
+		--c: #4267B2;
+	}
+	.social-icon.pr {
+		--c: #E60023;
+	}
+	.social-icon.in {
+		--c: #5B51D8;
+	}
