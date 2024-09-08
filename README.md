@@ -1,10 +1,10 @@
 Warehouse management project - SCE
 
 Students:
-  Gilad Abitbul - 315402719
-  Eva Maria Klassen - 323415042
-  Ester Moiseyev - 318692464
-  Yarden Dali - 207220013
+  Gilad Abitbul
+  Eva Maria Klassen
+  Ester Moiseyev
+  Yarden Dali
 
 
 Installation guide:
