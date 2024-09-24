@@ -1,44 +1,76 @@
-Warehouse management project - SCE
+# WH-Organization: Warehouse Management Project - SCE
+Welcome to WH-Organization, a web-based warehouse management system developed as part of my studies at Sami Shamoon College of Engineering, in partnership with Eva-Maria Klassen, Ester Moiseyev, and Yarden Dali, for the Visual Communication Department. This innovative platform aims to enhance communication and logistics by streamlining the management of department equipment for both faculty and students.
 
-Students:
-  Gilad Abitbul
-  Eva Maria Klassen
-  Ester Moiseyev
-  Yarden Dali
+## Team Members:
+  &middot; Gilad Abitbul<br/>
+  &middot; Eva Maria Klassen<br/>
+  &middot; Ester Moiseyev<br/>
+  &middot; Yarden Dali
 
+## Key Features:
+&middot; Efficient Equipment Tracking: WH-Organization allows warehouse managers to monitor inventory levels and oversee equipment loans for various users within the college.
 
-Installation guide:
-  - Download the files and extract from ZIP into desired directory.
-  - Install all the necessary libraries by using: pip install -r requirements.txt
-  - Run main.py file, this will build the app and restart the database.
-  - The url for the website will be printed in the terminal.
-  - development_functions.py file store the base admin, teacher and student accounts. If necessary, add users as you wish, all other classes can be added through the website.
-  - Each time running the main.py file the database will be resetted, make sure to set the "database_start_over()" function inside a comment (''' X ''') or delete it to avoide losing data.
+&middot; Simplified Equipment Requests: Faculty and students can easily create, edit, and cancel equipment requests through a user-friendly interface.
 
+&middot; Improved Communication: The system enhances communication between students, faculty, and warehouse managers, addressing issues that arise with existing platforms like Google Forms.
 
-Testing commands:
-To run the tests file and get report run these commands:
-  - radon cc .
-  - coverage run -m unittest app_test.py                  /* Integration tests */
-  - coverage run -m pytest tests\unit_test.py             /* unittests */
-  - coverage run -m pytest tests\unit_test2.py            /* unittests */
-  - coverage report
-  - pylint website
+&middot; Real-time Equipment Management: Our solution enables the issuance of tracking numbers (barcodes) for equipment, ensuring better accountability and organization.
 
+## Demo
 
-If one of these commands doesn't work, try pip install:
-  - for radon: pip install radon
-  - for coverage: pip install coverage
-  - for unittests: pip install unittest
-  - for pylint: pip install pylint
-> > these libraries should be included in requirements.txt file
+Check out the demo of the project here: [WH-Organization Demo](https://youtu.be/otuYlS4nnZE)
 
+## Installation guide:
+1. Download and Extract: Download the project files and extract them from the ZIP archive into your desired directory.
+   
+2. Install Dependencies: Navigate to the project directory and install the necessary libraries by running:
+   ```bash
+   pip install -r requirements.txt
+   ```
+   
+3. Run the Application: Execute the main.py file to build the app and initialize the database:
+   ```bash
+   python main.py
+   ```
+   The local host address will be printed in the terminal.
+   
+4. User Accounts: The development_functions.py file contains base accounts for admin, teachers, and students. You can add users as needed; all other classes can be added through the website interface.
+5. Database Reset: Each time you run the main.py file, the database will be reset. To avoid losing data, ensure that the database_start_over() in main.py marked as a comment
 
-Server system requirements:
-  - Python version 3.7.0 or newer.
-  - PC with Standard CPU (notice that better components result in better performance).
-  - PC runnig any type of web browser.
+## Testing Commands:
+To run the test files and generate a report, use the following commands:
+  ```bash
+  radon cc .
+  coverage run -m unittest app_test.py        # Integration tests
+  coverage run -m pytest tests/unit_test.py   # Unit tests
+  coverage run -m pytest tests/unit_test2.py  # Unit tests
+  coverage report
+  pylint website
+  ```
 
+## Troubleshooting
+If any of the commands do not work, ensure you have the required packages installed:
+<br/>
+&middot; For Radon:
+  ```bash
+  pip install radon
+  ```
+&middot; For Coverage:
+  ```bash
+  pip install coverage
+  ```
+&middot; For Unit Tests:
+  ```bash
+  pip install unittest
+  ```
+&middot; For Pylint:
+  ```bash
+  pip install pylint
+  ```
 
-Users system requirements:
-  - PC or mobile running any type of browser.
+## Contact
+For any questions or inquiries, please contact us at 
+abutbulgilad@gmail.com
+evaklassen81@gmail.com
+estermoiseyev@gmail.com
+yarden.dali11@gmail.com
