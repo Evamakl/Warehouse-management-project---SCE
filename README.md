@@ -1,5 +1,5 @@
 # WH-Organization: Warehouse Management Project - SCE
-Welcome to WH-Organization, a web-based warehouse management system developed as part of my studies at Sami Shamoon College of Engineering, in partnership with Eva-Maria Klassen, Ester Moiseyev, and Yarden Dali, for the Visual Communication Department. This innovative platform aims to enhance communication and logistics by streamlining the management of department equipment for both faculty and students.
+Welcome to WH-Organization, a web-based warehouse management system developed as part of my studies at Sami Shamoon College of Engineering, in partnership with Gilad Abitbul, Ester Moiseyev, and Yarden Dali, for the Visual Communication Department. This innovative platform aims to enhance communication and logistics by streamlining the management of department equipment for both faculty and students.
 
 ## Team Members:
   &middot; Gilad Abitbul<br/>
